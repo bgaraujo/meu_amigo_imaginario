@@ -1,26 +1,41 @@
 import React from 'react';
-import logo from './logo.svg';
 import './App.css';
+import Header from './components/Header';
+import Login from './components/Login';
+import * as firebase from 'firebase';
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
-}
+class App extends React.Component {
+  constructor(){
+    super();
+    this.state = {
+      speed:10
+    }
+  }
+
+  componentDidMount(){
+    const rootRef = firebase.database().ref();
+    const speedRef = rootRef.child('speed');
+    const auth = firebase.auth();
+    var user = auth.currentUser;
+
+    console.log(user);
+
+    speedRef.on('value',snap => {
+        this.setState({
+          speed:snap.val()
+        });
+    })
+  }
+
+  render(){
+    return(
+      <div className="App">
+        <Header />
+        <Login />
+      </div>
+    )
+  }
+};
+
 
 export default App;
