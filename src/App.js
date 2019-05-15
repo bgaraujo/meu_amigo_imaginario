@@ -2,14 +2,21 @@ import React from 'react';
 import './App.css';
 import Header from './components/Header';
 import Login from './components/Login';
+import Home from './components/Home';
+
 import * as firebase from 'firebase';
 
 class App extends React.Component {
   constructor(){
     super();
     this.state = {
-      speed:10
+      speed:10,
+      user:{}
     }
+  }
+
+  componentWillMount(){
+    //console.log("teste");
   }
 
   componentDidMount(){
@@ -18,7 +25,14 @@ class App extends React.Component {
     const auth = firebase.auth();
     var user = auth.currentUser;
 
-    console.log(user);
+    
+    if( user ){
+      this.setState({user});
+      //localStorage.setItem('user',user.uid);
+    }else{
+      this.setState({user:null});
+      //localStorage.removeItem('user');
+    }
 
     speedRef.on('value',snap => {
         this.setState({
@@ -28,10 +42,14 @@ class App extends React.Component {
   }
 
   render(){
+    firebase.auth(
+      console.log(this)
+    );
     return(
       <div className="App">
         <Header />
-        <Login />
+        { this.state.user ? (<Home/>) : (<Login />) }
+        
       </div>
     )
   }
