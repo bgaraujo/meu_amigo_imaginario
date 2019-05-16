@@ -14,6 +14,8 @@ const Header = () => (
                     <a class="nav-link" href="#">Home <span class="sr-only"></span></a>
                 </li>
             </ul>
+            
+            <button class="btn btn-info my-2 my-sm-0" type="submit">Solicitar ajuda!</button>
         </div>
     </nav>
 );

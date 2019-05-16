@@ -7,10 +7,9 @@ import Home from './components/Home';
 import * as firebase from 'firebase';
 
 class App extends React.Component {
-  constructor(){
-    super();
+  constructor(props){
+    super(props);
     this.state = {
-      speed:10,
       user:{}
     }
   }
@@ -20,31 +19,22 @@ class App extends React.Component {
   }
 
   componentDidMount(){
-    const rootRef = firebase.database().ref();
-    const speedRef = rootRef.child('speed');
-    const auth = firebase.auth();
-    var user = auth.currentUser;
+    this.authListener();
+  }
 
-    
-    if( user ){
-      this.setState({user});
-      //localStorage.setItem('user',user.uid);
-    }else{
-      this.setState({user:null});
-      //localStorage.removeItem('user');
-    }
-
-    speedRef.on('value',snap => {
-        this.setState({
-          speed:snap.val()
-        });
-    })
+  authListener(){
+    firebase.auth().onAuthStateChanged((user) => {
+      if( user ){
+        this.setState({user});
+        localStorage.setItem('user',user.uid);
+      }else{
+        this.setState({user:null});
+        localStorage.removeItem('user');
+      }
+    });
   }
 
   render(){
-    firebase.auth(
-      console.log(this)
-    );
     return(
       <div className="App">
         <Header />
