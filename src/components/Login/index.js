@@ -16,6 +16,7 @@ class Login extends React.Component{
     constructor(props){
         super(props);
         this.state = {
+            name:'',
             email:'',
             password:'',
             show:false,
@@ -54,14 +55,35 @@ class Login extends React.Component{
 
     login(e){
         const auth = firebase.auth();
-        var loginReturn =  auth.signInWithEmailAndPassword(this.state.email,this.state.password);
+        auth.signInWithEmailAndPassword(this.state.email,this.state.password);
     }
 
     addUser(){
-        console.log(this.state);
+        var thisState = this.state;
         const auth = firebase.auth();
-        var user = auth.createUserWithEmailAndPassword(this.state.email,this.state.password);
-        console.log(user.uid);
+        /*speedRef.once('value').then(function(snapshot) {
+            if(snapshot.val() == null){
+                speedRef.set( {
+                    name:this.state.name,
+                    email:this.state.email,
+                    professional:this.state.professional,
+                    crp:this.state.crp
+                } );
+            }
+        }).then(function(snapshot) {
+            
+            
+        });*/
+        auth.createUserWithEmailAndPassword(this.state.email,this.state.password).then(function(snapshot) {
+            const rootRef = firebase.database().ref();
+            const speedRef = rootRef.child('users/'+snapshot.user.uid);
+            speedRef.set( {
+                name:thisState.name,
+                email:thisState.email,
+                professional:thisState.professional,
+                crp:thisState.crp
+            } );
+        });;
     }
 
     modalShow(){
