@@ -1,5 +1,10 @@
 import React from 'react';
 import Style from '.';
+import Header from '../Header';
+import Container from 'react-bootstrap/Container';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
+import Jumbotron from 'react-bootstrap/Jumbotron';
 
 class Home extends React.Component{
     constructor(props){
@@ -32,23 +37,23 @@ class Home extends React.Component{
     
 
     render(){
-        console.log();
         return(
-            <div class="container"> 
-                <div class="row align-items-center">
-                    <div class="col-4">
-                        <div class="jumbotron jumbotron-fluid">
-                            <div class="container">
-                                <h1 class="display-4">{this.state.wellcomeMessage}</h1>
-                                <p class="lead">Conte-me sobre seu dia</p>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-8">
+            <Container>
+                <Header />
+                <Row>
+                    <Col lg="4">
+                        <Jumbotron>
+                            <Container>
+                                <h1>{this.state.wellcomeMessage}</h1>
+                                <p >Conte-me sobre seu dia</p>
+                            </Container>
+                        </Jumbotron>
+                    </Col>
+                    <Col lg="8">
                         
-                    </div>
-                </div>
-            </div>
+                    </Col>
+                </Row>
+            </Container>
         )
     }
 }

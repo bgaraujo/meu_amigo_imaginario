@@ -1,10 +1,9 @@
 import React from 'react';
 import './App.css';
-import Header from './components/Header';
+import * as firebase from 'firebase';
 import Login from './components/Login';
 import Home from './components/Home';
 
-import * as firebase from 'firebase';
 
 class App extends React.Component {
   constructor(props){
@@ -37,7 +36,7 @@ class App extends React.Component {
   render(){
     return(
       <div className="App">
-        <Header />
+      
         { this.state.user ? (<Home/>) : (<Login />) }
         
       </div>

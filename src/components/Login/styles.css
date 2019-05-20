@@ -1,3 +1,6 @@
-.row{
-    height: calc(100vh - 56px);  
+.card{
+    width: 30rem;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 3rem;
 }
