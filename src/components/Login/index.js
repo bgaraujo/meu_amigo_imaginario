@@ -61,19 +61,6 @@ class Login extends React.Component{
     addUser(){
         var thisState = this.state;
         const auth = firebase.auth();
-        /*speedRef.once('value').then(function(snapshot) {
-            if(snapshot.val() == null){
-                speedRef.set( {
-                    name:this.state.name,
-                    email:this.state.email,
-                    professional:this.state.professional,
-                    crp:this.state.crp
-                } );
-            }
-        }).then(function(snapshot) {
-            
-            
-        });*/
         auth.createUserWithEmailAndPassword(this.state.email,this.state.password).then(function(snapshot) {
             const rootRef = firebase.database().ref();
             const speedRef = rootRef.child('users/'+snapshot.user.uid);

@@ -13,10 +13,6 @@ class App extends React.Component {
     }
   }
 
-  componentWillMount(){
-    //console.log("teste");
-  }
-
   componentDidMount(){
     this.authListener();
   }
@@ -37,7 +33,7 @@ class App extends React.Component {
     return(
       <div className="App">
       
-        { this.state.user ? (<Home/>) : (<Login />) }
+        { this.state.user ? (<Home />) : (<Login />) }
         
       </div>
     )
