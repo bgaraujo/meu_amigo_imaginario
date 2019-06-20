@@ -4,6 +4,8 @@ import Row from 'react-bootstrap/Row';
 import Card from 'react-bootstrap/Card';
 
 class Feed extends React.Component{
+    _isMounted = false;
+
     constructor(props){
         super(props);
         this.state = {
@@ -11,6 +13,10 @@ class Feed extends React.Component{
             feed:[]
         }
         this.render = this.render.bind(this);
+    }
+
+    componentWillUnmount() {
+        this._isMounted = false;
     }
 
     componentDidMount(){
@@ -33,7 +39,6 @@ class Feed extends React.Component{
         return(
             <Row>
                 {this.state.feed.map((item) => {
-                    console.log(item)
                     return (
                         <Card>
                             <Card.Body>

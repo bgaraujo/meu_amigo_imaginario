@@ -1,6 +1,5 @@
 import React from 'react';
 import Style from './styles.css';
-import * as firebase from 'firebase';
 import Header from '../Header';
 import Container from 'react-bootstrap/Container';
 import Row from 'react-bootstrap/Row';
@@ -15,10 +14,11 @@ import Feed from './Feed';
 
 
 class Home extends React.Component{
+
     constructor(props){
         super(props);
         this.state = {
-            uid:localStorage.getItem('user'),
+            uid:"",
             wellcomeMessage:"Bom dia!",
             user:{},
             post:{
@@ -34,7 +34,12 @@ class Home extends React.Component{
         this.loading = this.loading.bind(this);
     }
 
+
+
     componentDidMount(){
+        
+        this.setState({uid:localStorage.getItem('user')});
+                
         var date = new Date();
         if( date.getHours() >= 12 && date.getHours() <= 18 )
             this.setState({wellcomeMessage:"Boa tarde!"});
@@ -55,7 +60,7 @@ class Home extends React.Component{
         post.created = date.getTime();
         post.uid = this.state.uid;
 
-        const rootRef = firebase.database().ref();
+        const rootRef = this.props.firebase.database().ref();
         const speedRef = rootRef.child('users/'+this.state.uid+'/feed');
         speedRef.push(post).then(()=>{
             this.setState({post:{
@@ -79,7 +84,7 @@ class Home extends React.Component{
     render(){
         return(
             <Container>
-                <Header />
+                <Header firebase={this.props.firebase} />
                 <Row>
                     <Col lg="4">
                         <Jumbotron>
@@ -121,7 +126,6 @@ class Home extends React.Component{
                                 </Card.Body>
                             </Card>
                         </Row>
-                        <Feed uid={this.state.uid} />
                     </Col>
                 </Row>
                 <this.loading/>

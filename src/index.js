@@ -17,6 +17,6 @@ var firebaseConfig = {
 
 firebase.initializeApp(firebaseConfig);
 
-ReactDOM.render(<App />, document.getElementById('root'));
+ReactDOM.render(<App firebase={firebase} />, document.getElementById('root'));
 
 serviceWorker.unregister();
