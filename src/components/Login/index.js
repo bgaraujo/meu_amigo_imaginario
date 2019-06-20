@@ -15,22 +15,20 @@ class Login extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            name:'',
             email:'',
             password:'',
-            show:false,
-            professional:false,
-            crp:""
+            cad:false
         }
         this.login = this.login.bind(this);
         this.change = this.change.bind(this);
         this.submit = this.submit.bind(this);
+        this.cadForm = this.cadForm.bind(this);
+        this.openCad = this.openCad.bind(this);
     }
 
     login(e){
         const auth = this.props.firebase.auth();
         auth.signInWithEmailAndPassword(this.state.email,this.state.password).catch(function(error) {
-            console.log(document.querySelectorAll('[data-control]').length);
             for (let index = 0; index < document.querySelectorAll('[data-control]').length; index++) {
                 document.querySelectorAll('[data-control]')[index].className += " is-invalid";
                 
@@ -43,6 +41,11 @@ class Login extends React.Component{
             this.login();
     }
 
+    openCad(e){
+        if( e.target.getAttribute('bool') == 'true' || e.target.getAttribute('bool') == 'false' )
+            this.setState({cad:e.target.getAttribute('bool')});
+    }
+
     change(e){
         this.setState({[e.target.name]:e.target.value});
         if(e.target.name === "personType" && e.target.value === "P")
@@ -50,15 +53,14 @@ class Login extends React.Component{
         if(e.target.name === "personType" && e.target.value === "N")
             this.setState({professional:false});
     }
-    
-    render(){
+
+    cadForm(){
         return(
             <Container> 
                 <Row>
                     <Col>
                         <Card>
                             <Card.Body>
-
                                 <Col className="text-center" lg="12">
                                     <img src={Logo}/>
                                 </Col>
@@ -87,7 +89,7 @@ class Login extends React.Component{
                                         <Button onClick={this.login} variant="primary">Entrar</Button>
                                     </Col>
                                     <Col ld="6" md="6" xs="6" className="text-right">
-                                        <Button onClick={this.modalShow} variant="secondary">Cadastrar</Button>
+                                        <Button onClick={this.openCad} bool="true" variant="secondary">Cadastrar</Button>
                                     </Col>
                                 </Row>
                             </Card.Body>
@@ -96,6 +98,14 @@ class Login extends React.Component{
                 </Row>
             </Container>
         ); 
+    }
+    
+    render(){
+        return(
+            <>
+                { this.state.cad ? <Cad firebase={this.props.firebase} /> : < this.cadForm /> }
+            </>
+        )
     }
     
 }

@@ -1,0 +1,17 @@
+.list-group-item{
+    cursor: pointer;
+}
+.list-group-item:hover{
+    background-color: #eee;
+}
+.list-group svg{
+    float: right;
+    font-size: 24px;
+}
+form p{
+    margin: 0;
+}
+form p em{
+    font-size: 10px;
+    color: red;
+}

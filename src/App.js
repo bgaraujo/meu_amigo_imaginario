@@ -2,7 +2,9 @@ import React from 'react';
 import './App.css';
 import Login from './components/Login';
 import Home from './components/Home';
-
+import Adm from './components/Adm';
+import Spinner from 'react-bootstrap/Spinner';
+import Modal from 'react-bootstrap/Modal';
 
 class App extends React.Component {
 
@@ -10,10 +12,14 @@ class App extends React.Component {
     super(props);
     this.state = {
       user:{},
-      load:true
+      load:true,
+      adm:false
     }
     this.startScreen = this.startScreen.bind(this);
     this.authListener = this.authListener.bind(this);
+    this.admin = this.admin.bind(this);
+    this.loading = this.loading.bind(this);
+    this.showLoad = this.showLoad.bind(this);
   }
 
   componentDidMount(){
@@ -25,18 +31,43 @@ class App extends React.Component {
       if( user ){
         this.setState({user});
         localStorage.setItem('user',user.uid);
+        this.admin(user.uid);
       }else{
         this.setState({user:null});
         localStorage.removeItem('user');
+        this.setState({load:false});
       }
-      this.setState({load:false});
+      
     });
+  }
+
+  admin(uid){
+    const rootRef = this.props.firebase.database().ref();
+    const speedRef = rootRef.child('users/'+uid);
+    speedRef.on('value', (snapshot) => {
+        if( snapshot.val().type == "admin" ){
+          this.setState({adm:true});
+          this.setState({load:false});
+        }
+    });
+  }
+
+  showLoad(boolean = false){
+    this.setState({load:boolean});
+  }
+
+  loading(){
+    return(
+        <Modal show={this.state.load} className="text-center loading">
+            <Spinner animation="border" variant="light" />
+        </Modal>
+    )
   }
 
   startScreen(){
     return(
       <div>
-        { this.state.user ? <Home firebase={this.props.firebase} /> : <Login firebase={this.props.firebase} /> }
+        { this.state.user ? ( this.state.adm ? <Adm firebase={this.props.firebase} showLoad={this.showLoad} /> : <Home firebase={this.props.firebase} showLoad={this.showLoad}/> ) : <Login firebase={this.props.firebase} /> }
       </div>
     );
   }
@@ -45,11 +76,11 @@ class App extends React.Component {
     const startScreen = this.startScreen();
     return(
       <div className="App">
-        {this.state.load ? <div></div> : startScreen }
+        {this.state.load ? <this.loading/> : < this.startScreen /> }
       </div>
     )
   }
-};
 
+};
 
 export default App;

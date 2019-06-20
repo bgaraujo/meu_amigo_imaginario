@@ -8,8 +8,6 @@ import Jumbotron from 'react-bootstrap/Jumbotron';
 import Card from 'react-bootstrap/Card';
 import Form from 'react-bootstrap/Form';
 import Button from 'react-bootstrap/Button';
-import Spinner from 'react-bootstrap/Spinner';
-import Modal from 'react-bootstrap/Modal';
 import Feed from './Feed';
 
 
@@ -31,7 +29,7 @@ class Home extends React.Component{
         }
         this.change = this.change.bind(this);
         this.savePost = this.savePost.bind(this);
-        this.loading = this.loading.bind(this);
+
     }
 
 
@@ -71,14 +69,6 @@ class Home extends React.Component{
             }});
             this.setState({show:false});
         });
-    }
-
-    loading(){
-        return(
-            <Modal show={this.state.show} className="text-center loading">
-                <Spinner animation="border" variant="light" />
-            </Modal>
-        )
     }
 
     render(){
@@ -128,7 +118,6 @@ class Home extends React.Component{
                         </Row>
                     </Col>
                 </Row>
-                <this.loading/>
             </Container>
         )
     }
