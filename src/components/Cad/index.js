@@ -11,10 +11,18 @@ class Cad extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            a:""
+            questions:[],
+            tab:0
         }
+
+        this.renderQuestions = this.renderQuestions.bind(this);
+        this.questions = this.questions.bind(this);
     }
 
+
+    componentDidMount(){
+        this.questions();
+    }
 
     addUser(){
         /*var thisState = this.state;
@@ -32,6 +40,39 @@ class Cad extends React.Component{
         */
     }
 
+    questions(){
+        const rootRef = this.props.firebase.database().ref();
+        const speedRef = rootRef.child('questions/cad');
+        speedRef.on('value', (snapshot) => {
+            var questions = [];
+            for(var key in snapshot.val()){
+                var question = snapshot.val()[key];
+                questions.push(question);
+            }
+
+            this.setState({questions:questions});
+        });
+    }
+
+    renderQuestions(){
+        var questionsCad = this.state.questions.map( (item,key) => {
+            console.log(item);
+            return (
+                <div data-tab={key} hidden>
+                    <h1>{item.title}</h1>
+                    <p>{item.description}</p>    
+                    <input type="text"></input>
+                </div>
+            )
+        } );
+
+        return(
+            <>
+                {questionsCad}
+            </>
+        );
+    }
+
     render(){
         return(
             <Container> 
@@ -46,22 +87,27 @@ class Cad extends React.Component{
                                     <img src=""/>
                                 </Col>
                                  
-                                <Form.Group data-control="login">
-                                    <Form.Label>Email address</Form.Label>
-                                    <Form.Control
-                                        type="email"
-                                        name="email"
-                                        value={this.state.email}
-                                        onChange={this.change}
-                                        placeholder="Enter email"/>
-                                </Form.Group>
+                                <Row>
+                                    <Col>
+                                        <div data-tab="0">
+                                            <p>Para seu cadastro preciso de algumas informacoes</p>
+                                            <p>Email</p>    
+                                            <input type="text"></input>
+                                        </div>
+                                        <this.renderQuestions/>
+                                    </Col>
+                                </Row>
+                                
                                 <Row>
                                     <Col ld="6" md="6" xs="6">
                                         <Button onClick={this.login} variant="primary">Entrar</Button>
                                     </Col>
+
                                     <Col ld="6" md="6" xs="6" className="text-right">
                                         <Button onClick={this.openCad} bool="true" variant="secondary">Cadastrar</Button>
                                     </Col>
+
+                                    
                                 </Row>
                                 
                             </Card.Body>
