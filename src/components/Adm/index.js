@@ -8,6 +8,8 @@ import Button from 'react-bootstrap/Button';
 import ListGroup from 'react-bootstrap/ListGroup';
 import Modal from 'react-bootstrap/Modal';
 import Form from 'react-bootstrap/Form';
+import Row from 'react-bootstrap/Row';
+import Col from 'react-bootstrap/Col';
 import { MdNoteAdd,MdDelete } from "react-icons/md";
 
 class Adm extends React.Component{
@@ -15,8 +17,13 @@ class Adm extends React.Component{
     constructor(props){
         super(props);
         this.state = {
-            questions:[],
-            show:false
+            questions:{
+                cad:[],
+                aval:[],
+                moti:[]
+            },
+            show:false,
+            update:false
         }
         this.getQuestions = this.getQuestions.bind(this);
         this.setQuestion = this.setQuestion.bind(this);
@@ -27,24 +34,26 @@ class Adm extends React.Component{
 
     componentDidMount(){
         this.getQuestions();
-        
-        //console.log(this.propas);
-        //this.props.showLoad(true);
     }
 
     getQuestions(){
+        var questions = this.state.questions;
         const rootRef = this.props.firebase.database().ref();
-        const speedRef = rootRef.child('questions/cad');
-        var questions = [];
+        const speedRef = rootRef.child('questions');
         speedRef.on('value', (snapshot) => {
+            
             for(var key in snapshot.val()){
                 var question = snapshot.val()[key];
-                question.key = key;
-                questions.push(question);
+                questions[key] = [];
+                for( var iQuestion in  question){
+                    var cQuestion = question[iQuestion];
+                    questions[key].push(cQuestion);
+                }
             }
 
             this.setState({questions:questions});
         });
+        
     }
 
     setQuestion(){
@@ -140,8 +149,31 @@ class Adm extends React.Component{
     }
 
     render(){
+        var questionsCad = this.state.questions.cad.map( (item,key) => {
+            return (
+                <ListGroup.Item 
+                    key={key} 
+                    onClick={this.updateQuestion} 
+                    data-key={item.key}
+                >
+                    {item.description}
+                </ListGroup.Item>
+            )
+        } );
 
-        var questions = this.state.questions.map( (item,key) => {
+        var questionsAval = this.state.questions.aval.map( (item,key) => {
+            return (
+                <ListGroup.Item 
+                    key={key} 
+                    onClick={this.updateQuestion} 
+                    data-key={item.key}
+                >
+                    {item.description}
+                </ListGroup.Item>
+            )
+        } );
+
+        var questionsMoti = this.state.questions.moti.map( (item,key) => {
             return (
                 <ListGroup.Item 
                     key={key} 
@@ -156,12 +188,24 @@ class Adm extends React.Component{
         return(
             <>
                 <Container>
+                    <Row>
+                        <Col md={{ span: 4, offset: 4 }}>
+                            <br/>
+                            <Button  onClick={this.modal} bool="true">
+                                Adicionar uma nova pergunta
+                                <MdNoteAdd/>
+                            </Button>
+                        </Col>
+                    </Row>
+                    
+                    <br/>
+
                     <Accordion defaultActiveKey="0">
                         
                         <Card>
                             <Card.Header>
                                 <Accordion.Toggle as={Button} variant="link" eventKey="0">
-                                    Pergundas de cadastro
+                                    Pergundas de Cadastro
                                 </Accordion.Toggle>
                             </Card.Header>
 
@@ -169,15 +213,8 @@ class Adm extends React.Component{
                                 
                                 <Card.Body>
                                     <ListGroup>
-                                        
-                                        <ListGroup.Item  onClick={this.modal} bool="true">
-                                            Adicionar uma nova pergunta
-                                            <MdNoteAdd/>
-                                        </ListGroup.Item>
-                                        {questions}
-
+                                        {questionsCad}
                                     </ListGroup>
-
                                 </Card.Body>
 
                             </Accordion.Collapse>
@@ -186,13 +223,37 @@ class Adm extends React.Component{
                         <Card>
                             <Card.Header>
                             <Accordion.Toggle as={Button} variant="link" eventKey="1">
-                                Click me!
+                                Perguntas de Avaliacao
                             </Accordion.Toggle>
                             </Card.Header>
                             <Accordion.Collapse eventKey="1">
-                            <Card.Body>Hello! I'm another body</Card.Body>
+
+                                <Card.Body>
+                                    <ListGroup>
+                                        {questionsAval}
+                                    </ListGroup>
+                                </Card.Body>
+
                             </Accordion.Collapse>
                         </Card>
+
+                        <Card>
+                            <Card.Header>
+                            <Accordion.Toggle as={Button} variant="link" eventKey="2">
+                                Perguntas de Motivacao
+                            </Accordion.Toggle>
+                            </Card.Header>
+                            <Accordion.Collapse eventKey="2">
+
+                                <Card.Body>
+                                    <ListGroup>
+                                        {questionsMoti}
+                                    </ListGroup>
+                                </Card.Body>
+
+                            </Accordion.Collapse>
+                        </Card>
+
                     </Accordion>
                 </Container>
                 {this.state.show ? <this.formQuestionCad/> : "" }
