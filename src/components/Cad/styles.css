@@ -3,3 +3,9 @@
     padding-bottom: 15px;
     margin-bottom: 15px;
 }
+input{
+    border: none;
+    border-bottom: 1px solid #ccc;
+    outline: none;
+    width: 100%;
+}

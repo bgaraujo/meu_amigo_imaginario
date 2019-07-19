@@ -56,9 +56,8 @@ class Cad extends React.Component{
 
     renderQuestions(){
         var questionsCad = this.state.questions.map( (item,key) => {
-            console.log(item);
             return (
-                <div data-tab={key} hidden>
+                <div key={key} data-tab={key+1} hidden>
                     <h1>{item.title}</h1>
                     <p>{item.description}</p>    
                     <input type="text"></input>
@@ -91,8 +90,13 @@ class Cad extends React.Component{
                                     <Col>
                                         <div data-tab="0">
                                             <p>Para seu cadastro preciso de algumas informacoes</p>
+                                            <i>Para seu login</i>
+                                            <br/>
+                                            <br/>
                                             <p>Email</p>    
                                             <input type="text"></input>
+                                            <p>Senha</p>    
+                                            <input type="password"></input>
                                         </div>
                                         <this.renderQuestions/>
                                     </Col>
